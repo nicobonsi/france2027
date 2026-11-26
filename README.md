@@ -17,7 +17,8 @@ mais avec une différence de fond : usaciv décrit, France 2027 veut aussi **sim
   chômage et son évolution, tissu d'établissements, logement, résultats du 1er tour de la présidentielle 2022.
 - Fiche par territoire (valeurs, rang, moyenne nationale, résultats 2022), recherche, lien partageable
   (`#indicateur=…&territoire=…`), Almanach qui documente chaque chiffre et sa source.
-- **Règle d'or : rien n'est estimé.** Quand une source ne couvre pas un territoire, il est hachuré « non publié ».
+- En ligne : https://nicobonsi.github.io/france2027/ (mis à jour automatiquement à chaque push sur `main`).
+- **Règle d’or : rien n'est estimé.** Quand une source ne couvre pas un territoire, il est hachuré « non publié ».
 
 ### Les trous de données, à connaître
 
