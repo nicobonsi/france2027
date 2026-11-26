@@ -175,8 +175,8 @@
   },
   {
    "id": "p22_winner",
-   "group": "Présidentielle 2022",
-   "label": "Arrivé(e) en tête au 1er tour",
+   "group": "Présidentielle 2022 — 1er tour",
+   "label": "Arrivé(e) en tête",
    "scale": "categorical",
    "colors": {
     "Emmanuel Macron": "#e3b505",
@@ -193,8 +193,8 @@
   },
   {
    "id": "p22_abstention",
-   "group": "Présidentielle 2022",
-   "label": "Abstention (1er tour)",
+   "group": "Présidentielle 2022 — 1er tour",
+   "label": "Abstention",
    "unit": "%",
    "fmt": "pct1",
    "scale": "linear",
@@ -206,7 +206,7 @@
   },
   {
    "id": "p22_macron",
-   "group": "Présidentielle 2022",
+   "group": "Présidentielle 2022 — 1er tour",
    "label": "Emmanuel Macron",
    "unit": "% exprimés",
    "fmt": "pct1",
@@ -219,7 +219,7 @@
   },
   {
    "id": "p22_lepen",
-   "group": "Présidentielle 2022",
+   "group": "Présidentielle 2022 — 1er tour",
    "label": "Marine Le Pen",
    "unit": "% exprimés",
    "fmt": "pct1",
@@ -232,7 +232,7 @@
   },
   {
    "id": "p22_melenchon",
-   "group": "Présidentielle 2022",
+   "group": "Présidentielle 2022 — 1er tour",
    "label": "Jean-Luc Mélenchon",
    "unit": "% exprimés",
    "fmt": "pct1",
@@ -245,7 +245,7 @@
   },
   {
    "id": "p22_zemmour",
-   "group": "Présidentielle 2022",
+   "group": "Présidentielle 2022 — 1er tour",
    "label": "Éric Zemmour",
    "unit": "% exprimés",
    "fmt": "pct1",
@@ -258,7 +258,7 @@
   },
   {
    "id": "p22_pecresse",
-   "group": "Présidentielle 2022",
+   "group": "Présidentielle 2022 — 1er tour",
    "label": "Valérie Pécresse",
    "unit": "% exprimés",
    "fmt": "pct1",
@@ -267,6 +267,69 @@
    "year": "10 avril 2022",
    "source": "mi_pres2022_t1",
    "description": "Score de Valérie Pécresse au premier tour, en % des suffrages exprimés.",
+   "coverage": "Tous les territoires."
+  },
+  {
+   "id": "p22t2_winner",
+   "group": "Présidentielle 2022 — 2nd tour",
+   "label": "Vainqueur",
+   "scale": "categorical",
+   "colors": {
+    "Emmanuel Macron": "#e3b505",
+    "Marine Le Pen": "#1f3a93",
+    "Jean-Luc Mélenchon": "#c0392b",
+    "Éric Zemmour": "#6d4c41",
+    "Valérie Pécresse": "#3d7fd1",
+    "Yannick Jadot": "#2e9e4f"
+   },
+   "year": "24 avril 2022",
+   "source": "mi_pres2022_t2",
+   "description": "Candidat arrivé en tête au second tour (Emmanuel Macron face à Marine Le Pen).",
+   "coverage": "Tous les territoires, y compris les COM et les Français de l'étranger."
+  },
+  {
+   "id": "p22t2_macron",
+   "group": "Présidentielle 2022 — 2nd tour",
+   "label": "Macron / Le Pen",
+   "unit": "% exprimés pour Macron",
+   "fmt": "pct1",
+   "scale": "diverging",
+   "center": 50,
+   "span": 20,
+   "ends": [
+    "Le Pen majoritaire",
+    "Macron majoritaire"
+   ],
+   "ramp": "duel",
+   "year": "24 avril 2022",
+   "source": "mi_pres2022_t2",
+   "description": "Score d'Emmanuel Macron en % des suffrages exprimés ; Marine Le Pen obtient le complément à 100. Centré sur 50 % : doré = Macron majoritaire, bleu = Le Pen majoritaire.",
+   "coverage": "Tous les territoires."
+  },
+  {
+   "id": "p22t2_abstention",
+   "group": "Présidentielle 2022 — 2nd tour",
+   "label": "Abstention",
+   "unit": "%",
+   "fmt": "pct1",
+   "scale": "linear",
+   "ramp": "grey",
+   "year": "24 avril 2022",
+   "source": "mi_pres2022_t2",
+   "description": "Abstentions rapportées aux inscrits.",
+   "coverage": "Tous les territoires. À l'étranger, l'abstention structurelle est très élevée (listes consulaires peu tenues à jour)."
+  },
+  {
+   "id": "p22t2_blancs_nuls",
+   "group": "Présidentielle 2022 — 2nd tour",
+   "label": "Votes blancs et nuls",
+   "unit": "% votants",
+   "fmt": "pct1",
+   "scale": "linear",
+   "ramp": "purple",
+   "year": "24 avril 2022",
+   "source": "mi_pres2022_t2",
+   "description": "Bulletins blancs et nuls rapportés aux votants : le refus de choisir entre les deux finalistes.",
    "coverage": "Tous les territoires."
   }
  ]

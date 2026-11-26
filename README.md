@@ -13,8 +13,8 @@ mais avec une différence de fond : usaciv décrit, France 2027 veut aussi **sim
 - Les collectivités d'outre-mer (Nouvelle-Calédonie, Polynésie, Wallis-et-Futuna, Saint-Pierre-et-Miquelon,
   Saint-Martin/Saint-Barthélemy) et les Français de l'étranger, sous forme de tuiles : l'IGN ne publie pas leurs contours
   dans ADMIN EXPRESS, et on n'invente pas de géographie.
-- 20 indicateurs (« lentilles ») : population, densité, croissance, solde naturel, niveau de vie médian, pauvreté,
-  chômage et son évolution, tissu d'établissements, logement, résultats du 1er tour de la présidentielle 2022.
+- 24 indicateurs (« lentilles ») : population, densité, croissance, solde naturel, niveau de vie médian, pauvreté,
+  chômage et son évolution, tissu d'établissements, logement, résultats des deux tours de la présidentielle 2022.
 - Fiche par territoire (valeurs, rang, moyenne nationale, résultats 2022), recherche, lien partageable
   (`#indicateur=…&territoire=…`), Almanach qui documente chaque chiffre et sa source.
 - En ligne : https://nicobonsi.github.io/france2027/ (mis à jour automatiquement à chaque push sur `main`).

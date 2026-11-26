@@ -45,4 +45,14 @@ SOURCES = [
             "pres2022_t1_dpt.xlsx": "https://static.data.gouv.fr/resources/election-presidentielle-des-10-et-24-avril-2022-resultats-definitifs-du-1er-tour/20220414-152411/resultats-par-niveau-dpt-t1-france-entiere.xlsx"
         },
     },
+    {
+        "id": "mi_pres2022_t2",
+        "title": "Élection présidentielle 2022 — résultats définitifs du 2nd tour par département",
+        "publisher": "Ministère de l'Intérieur",
+        "page": "https://www.data.gouv.fr/fr/datasets/626a86215fb310e32b48b137/",
+        "licence": "Licence Ouverte Etalab 2.0",
+        "files": {
+            "pres2022_t2_dpt.xlsx": "https://static.data.gouv.fr/resources/election-presidentielle-des-10-et-24-avril-2022-resultats-definitifs-du-2nd-tour/20220428-142147/resultats-par-niveau-dpt-t2-france-entiere.xlsx"
+        },
+    },
 ]

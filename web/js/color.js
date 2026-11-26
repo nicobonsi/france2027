@@ -13,6 +13,7 @@ export const RAMPS = {
   brown: ["#f4ece6", "#dcc3b2", "#bf9779", "#9a6d4e", "#6f4a32", "#462d1d"],
   blue: ["#e8f1fb", "#b4d2f1", "#79ade3", "#3f84cc", "#1f5ea3", "#0e3b6e"],
   diverging: ["#2166ac", "#67a9cf", "#d1e5f0", "#f7f7f7", "#fddbc7", "#ef8a62", "#b2182b"],
+  duel: ["#162758", "#2b4483", "#7f97c9", "#e9e4d6", "#f3dd8f", "#e3b84a", "#9a7108"], // Le Pen ← 50 % → Macron
   diverging_rev: ["#1a9850", "#91cf60", "#d9ef8b", "#f7f7f7", "#fee08b", "#fc8d59", "#d73027"],
 };
 

@@ -278,10 +278,10 @@ def load_unemployment():
     return now, delta, national, quarter_label(cols[-1]), window
 
 
-def load_election():
-    df = pd.read_excel(RAW / "pres2022_t1_dpt.xlsx", dtype={"Code du département": str})
-    base = list(df.columns[:17])
-    rows, nat = {}, {"inscrits": 0, "abst": 0, "exp": 0, "votes": {}}
+def load_election(filename: str):
+    """Ministry of the Interior results by département: one row per territory, then 6 columns per candidate."""
+    df = pd.read_excel(RAW / filename, dtype={"Code du département": str})
+    rows, nat = {}, {"inscrits": 0, "abst": 0, "votants": 0, "blancs_nuls": 0, "exp": 0, "votes": {}}
     for _, r in df.iterrows():
         code = ELECTION_CODES.get(r["Code du département"], r["Code du département"])
         votes = {}
@@ -290,10 +290,11 @@ def load_election():
             if isinstance(name, str):
                 votes[f"{r.iloc[i + 2]} {name.title()}"] = int(r.iloc[i + 3])
         exp = int(r["Exprimés"])
-        rows[code] = {"inscrits": int(r["Inscrits"]), "abst": int(r["Abstentions"]), "exp": exp, "votes": votes}
-        nat["inscrits"] += int(r["Inscrits"])
-        nat["abst"] += int(r["Abstentions"])
-        nat["exp"] += exp
+        bn = int(r["Blancs"]) + int(r["Nuls"])
+        rows[code] = {"inscrits": int(r["Inscrits"]), "abst": int(r["Abstentions"]), "votants": int(r["Votants"]),
+                      "blancs_nuls": bn, "exp": exp, "votes": votes}
+        for k in ("inscrits", "abst", "votants", "blancs_nuls", "exp"):
+            nat[k] += rows[code][k]
         for k, v in votes.items():
             nat["votes"][k] = nat["votes"].get(k, 0) + v
     return rows, nat
@@ -334,7 +335,8 @@ def main() -> None:
     estab_ind = pick(c, "UNIT_LOC_ACTIVITY_BE", "2024")
 
     unemp, unemp_delta, unemp_nat, unemp_label, unemp_prev_label = load_unemployment()
-    elec, elec_nat = load_election()
+    elec, elec_nat = load_election("pres2022_t1_dpt.xlsx")
+    elec2, elec2_nat = load_election("pres2022_t2_dpt.xlsx")
 
     values = {
         "population": pop,
@@ -355,6 +357,10 @@ def main() -> None:
     for lid, name, _ in CANDIDATE_LENSES:
         values[lid] = {g: e["votes"].get(name, 0) / e["exp"] * 100 for g, e in elec.items() if e["exp"]}
     winner = {g: max(e["votes"].items(), key=lambda kv: kv[1])[0] for g, e in elec.items()}
+    values["p22t2_macron"] = {g: e["votes"]["Emmanuel Macron"] / e["exp"] * 100 for g, e in elec2.items() if e["exp"]}
+    values["p22t2_abstention"] = {g: e["abst"] / e["inscrits"] * 100 for g, e in elec2.items()}
+    values["p22t2_blancs_nuls"] = {g: e["blancs_nuls"] / e["votants"] * 100 for g, e in elec2.items() if e["votants"]}
+    winner2 = {g: max(e["votes"].items(), key=lambda kv: kv[1])[0] for g, e in elec2.items()}
 
     # Territory records
     territories = {}
@@ -373,10 +379,12 @@ def main() -> None:
             v = m.get(code)
             t["values"][lid] = None if v is None or (isinstance(v, float) and math.isnan(v)) else round(float(v), 2)
         t["values"]["p22_winner"] = winner.get(code)
-        if code in elec:
-            e = elec[code]
-            t["p22"] = {"inscrits": e["inscrits"], "exprimes": e["exp"],
-                        "results": sorted(([k, round(v / e["exp"] * 100, 2)] for k, v in e["votes"].items()), key=lambda kv: -kv[1])}
+        t["values"]["p22t2_winner"] = winner2.get(code)
+        for key, el in (("p22", elec), ("p22t2", elec2)):
+            if code in el:
+                e = el[code]
+                t[key] = {"inscrits": e["inscrits"], "exprimes": e["exp"],
+                          "results": sorted(([k, round(v / e["exp"] * 100, 2)] for k, v in e["votes"].items()), key=lambda kv: -kv[1])}
 
     (OUT / "data.json").write_text(json.dumps({"territories": territories}, ensure_ascii=False, separators=(",", ":")))
 
@@ -427,17 +435,33 @@ def main() -> None:
          "coverage": f"{NO_MAYOTTE_RP} {COM_NOTE}"},
         {"id": "vacant_homes", "group": "Logement", "label": "Logements vacants", "unit": "%", "fmt": "pct1", "scale": "linear", "ramp": "orange",
          "year": "2023", "source": "insee_comparateur", "description": "Part des logements vacants dans le parc.", "coverage": f"{NO_MAYOTTE_RP} {COM_NOTE}"},
-        {"id": "p22_winner", "group": "Présidentielle 2022", "label": "Arrivé(e) en tête au 1er tour", "scale": "categorical",
+        {"id": "p22_winner", "group": "Présidentielle 2022 — 1er tour", "label": "Arrivé(e) en tête", "scale": "categorical",
          "colors": CANDIDATE_COLOURS, "year": "10 avril 2022", "source": "mi_pres2022_t1",
          "description": "Candidat ayant obtenu le plus de suffrages exprimés au premier tour.", "coverage": "Tous les territoires, y compris les COM et les Français de l'étranger."},
-        {"id": "p22_abstention", "group": "Présidentielle 2022", "label": "Abstention (1er tour)", "unit": "%", "fmt": "pct1", "scale": "linear", "ramp": "grey",
+        {"id": "p22_abstention", "group": "Présidentielle 2022 — 1er tour", "label": "Abstention", "unit": "%", "fmt": "pct1", "scale": "linear", "ramp": "grey",
          "year": "10 avril 2022", "source": "mi_pres2022_t1", "description": "Abstentions rapportées aux inscrits.",
          "coverage": "Tous les territoires. À l'étranger, l'abstention structurelle est très élevée (listes consulaires peu tenues à jour)."},
     ]
     for lid, name, ramp in CANDIDATE_LENSES:
-        lenses.append({"id": lid, "group": "Présidentielle 2022", "label": name, "unit": "% exprimés", "fmt": "pct1", "scale": "linear", "ramp": ramp,
+        lenses.append({"id": lid, "group": "Présidentielle 2022 — 1er tour", "label": name, "unit": "% exprimés", "fmt": "pct1", "scale": "linear", "ramp": ramp,
                        "year": "10 avril 2022", "source": "mi_pres2022_t1", "description": f"Score de {name} au premier tour, en % des suffrages exprimés.",
                        "coverage": "Tous les territoires."})
+    T2 = "Présidentielle 2022 — 2nd tour"
+    lenses += [
+        {"id": "p22t2_winner", "group": T2, "label": "Vainqueur", "scale": "categorical", "colors": CANDIDATE_COLOURS,
+         "year": "24 avril 2022", "source": "mi_pres2022_t2", "description": "Candidat arrivé en tête au second tour (Emmanuel Macron face à Marine Le Pen).",
+         "coverage": "Tous les territoires, y compris les COM et les Français de l'étranger."},
+        {"id": "p22t2_macron", "group": T2, "label": "Macron / Le Pen", "unit": "% exprimés pour Macron", "fmt": "pct1", "scale": "diverging", "center": 50, "span": 20,
+         "ends": ["Le Pen majoritaire", "Macron majoritaire"], "ramp": "duel", "year": "24 avril 2022", "source": "mi_pres2022_t2",
+         "description": "Score d'Emmanuel Macron en % des suffrages exprimés ; Marine Le Pen obtient le complément à 100. Centré sur 50 % : doré = Macron majoritaire, bleu = Le Pen majoritaire.",
+         "coverage": "Tous les territoires."},
+        {"id": "p22t2_abstention", "group": T2, "label": "Abstention", "unit": "%", "fmt": "pct1", "scale": "linear", "ramp": "grey",
+         "year": "24 avril 2022", "source": "mi_pres2022_t2", "description": "Abstentions rapportées aux inscrits.",
+         "coverage": "Tous les territoires. À l'étranger, l'abstention structurelle est très élevée (listes consulaires peu tenues à jour)."},
+        {"id": "p22t2_blancs_nuls", "group": T2, "label": "Votes blancs et nuls", "unit": "% votants", "fmt": "pct1", "scale": "linear", "ramp": "purple",
+         "year": "24 avril 2022", "source": "mi_pres2022_t2", "description": "Bulletins blancs et nuls rapportés aux votants : le refus de choisir entre les deux finalistes.",
+         "coverage": "Tous les territoires."},
+    ]
     (OUT / "lenses.json").write_text(json.dumps({"lenses": lenses}, ensure_ascii=False, indent=1))
 
     (OUT / "sources.json").write_text(json.dumps(
@@ -453,6 +477,9 @@ def main() -> None:
             {"id": "p22_abstention", "label": "Abstention 2022", "value": round(elec_nat["abst"] / elec_nat["inscrits"] * 100, 2), "fmt": "pct1",
              "note": "Présidentielle 2022, 1er tour, ensemble des inscrits."},
         ],
+        "p22t2": sorted(([k, round(v / elec2_nat["exp"] * 100, 2)] for k, v in elec2_nat["votes"].items()), key=lambda kv: -kv[1]),
+        "p22t2_abstention": round(elec2_nat["abst"] / elec2_nat["inscrits"] * 100, 2),
+        "p22t2_blancs_nuls": round(elec2_nat["blancs_nuls"] / elec2_nat["votants"] * 100, 2),
         "p22": sorted(([k, round(v / elec_nat["exp"] * 100, 2)] for k, v in elec_nat["votes"].items()), key=lambda kv: -kv[1]),
     }
     (OUT / "nation.json").write_text(json.dumps(nation, ensure_ascii=False, indent=1))

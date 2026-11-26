@@ -32,7 +32,10 @@ function domainFor(lens) {
   // Trim the extreme 2% so one outlier (Paris density, Guyane unemployment) doesn't flatten the map.
   const q = (p) => vals[Math.min(vals.length - 1, Math.max(0, Math.round(p * (vals.length - 1))))];
   let lo = q(0.02), hi = q(0.98);
-  if (lens.scale === "diverging") { const m = Math.max(Math.abs(lo), Math.abs(hi)); lo = -m; hi = m; }
+  if (lens.scale === "diverging") { // symmetric around the centre (0 by default, 50 for a two-candidate duel)
+    const c = lens.center ?? 0, m = lens.span ?? Math.max(Math.abs(lo - c), Math.abs(hi - c));
+    lo = c - m; hi = c + m;
+  }
   if (lens.scale === "log") { lo = Math.max(lo, 0.01); }
   return { lo, hi, min: vals[0], max: vals[vals.length - 1] };
 }
@@ -244,7 +247,8 @@ function drawLegend(lens, dom) {
     const stops = ramp.map((c, i) => `${c} ${(i / (ramp.length - 1)) * 100}%`).join(",");
     const mid = lens.scale === "log" ? Math.sqrt(dom.lo * dom.hi) : (dom.lo + dom.hi) / 2;
     body = `<div class="bar" style="background:linear-gradient(90deg,${stops})"></div>
-      <div class="ticks"><span>${lens.scale === "diverging" ? "" : "≤ "}${fmt(dom.lo, lens.fmt)}</span><span>${fmt(mid, lens.fmt)}</span><span>${lens.scale === "diverging" ? "" : "≥ "}${fmt(dom.hi, lens.fmt)}</span></div>`;
+      <div class="ticks"><span>${lens.scale === "diverging" ? "" : "≤ "}${fmt(dom.lo, lens.fmt)}</span><span>${fmt(mid, lens.fmt)}</span><span>${lens.scale === "diverging" ? "" : "≥ "}${fmt(dom.hi, lens.fmt)}</span></div>
+      ${lens.ends ? `<div class="ticks"><span>← ${esc(lens.ends[0])}</span><span>${esc(lens.ends[1])} →</span></div>` : ""}`;
   }
   const missing = Object.values(data.territories).filter((t) => t.values[lens.id] == null).map((t) => t.name);
   $("#legend").innerHTML = `
@@ -308,7 +312,7 @@ function openPanel(code) {
   const kindLabel = { dep: "Département", drom: "Département et région d'outre-mer", com: "Collectivité d'outre-mer", abroad: "Circonscriptions consulaires" }[t.kind];
   const groups = new Map();
   for (const l of lenses) {
-    if (l.group === "Présidentielle 2022") continue;
+    if (l.group.startsWith("Présidentielle")) continue;
     if (!groups.has(l.group)) groups.set(l.group, []);
     groups.get(l.group).push(l);
   }
@@ -321,9 +325,12 @@ function openPanel(code) {
       <td class="n">${rk ? `${rk[0]}<sup>e</sup>/${rk[1]}` : ""}${nat != null && v != null ? `<br>France ${fmt(nat, l.fmt)}` : ""}</td></tr>`;
   }).join("")}</table>`).join("");
 
-  const res = t.p22 ? `<h4>Présidentielle 2022 — 1er tour</h4>
-    <div class="sub">${fmt(t.p22.inscrits, "int")} inscrits · abstention ${fmt(t.values.p22_abstention, "pct1")}</div>
-    <div class="res">${t.p22.results.slice(0, 8).map(([n, p]) => `<span>${esc(n)}</span><div><div class="b" style="width:${(p / t.p22.results[0][1]) * 100}%;background:${lensById.get("p22_winner").colors[n] || "#8a8f98"}"></div></div><span class="p">${fmt(p, "pct1")}</span>`).join("")}</div>` : "";
+  const colors = lensById.get("p22_winner").colors;
+  const results = (r, title, abst, extra = "") => r ? `<h4>${title}</h4>
+    <div class="sub">${fmt(r.inscrits, "int")} inscrits · abstention ${fmt(abst, "pct1")}${extra}</div>
+    <div class="res">${r.results.slice(0, 8).map(([n, p]) => `<span>${esc(n)}</span><div><div class="b" style="width:${(p / r.results[0][1]) * 100}%;background:${colors[n] || "#8a8f98"}"></div></div><span class="p">${fmt(p, "pct1")}</span>`).join("")}</div>` : "";
+  const res = results(t.p22t2, "Présidentielle 2022 — 2nd tour", t.values.p22t2_abstention, ` · blancs et nuls ${fmt(t.values.p22t2_blancs_nuls, "pct1")} des votants`)
+    + results(t.p22, "Présidentielle 2022 — 1er tour", t.values.p22_abstention);
 
   const missing = lenses.filter((l) => t.values[l.id] == null).map((l) => l.label);
   $("#panel").innerHTML = `<button class="close" data-close aria-label="Fermer">✕</button>

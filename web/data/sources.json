@@ -26,5 +26,12 @@
   "publisher": "Ministère de l'Intérieur",
   "page": "https://www.data.gouv.fr/fr/datasets/62581fdf02e05e365ea227a1/",
   "licence": "Licence Ouverte Etalab 2.0"
+ },
+ {
+  "id": "mi_pres2022_t2",
+  "title": "Élection présidentielle 2022 — résultats définitifs du 2nd tour par département",
+  "publisher": "Ministère de l'Intérieur",
+  "page": "https://www.data.gouv.fr/fr/datasets/626a86215fb310e32b48b137/",
+  "licence": "Licence Ouverte Etalab 2.0"
  }
 ]

@@ -36,6 +36,18 @@
    "note": "Présidentielle 2022, 1er tour, ensemble des inscrits."
   }
  ],
+ "p22t2": [
+  [
+   "Emmanuel Macron",
+   58.55
+  ],
+  [
+   "Marine Le Pen",
+   41.45
+  ]
+ ],
+ "p22t2_abstention": 28.01,
+ "p22t2_blancs_nuls": 8.66,
  "p22": [
   [
    "Emmanuel Macron",
