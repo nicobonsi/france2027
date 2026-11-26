@@ -6,6 +6,8 @@ permettre, avant la présidentielle de 2027, de confronter les programmes des ca
 Inspiré par [usaciv](https://karpathy.ai/usaciv/) (les États-Unis dessinés comme une carte de jeu de stratégie),
 mais avec une différence de fond : usaciv décrit, France 2027 veut aussi **simuler**.
 
+![Carte France 2027 : taux de pauvreté, fiche de la Seine-Saint-Denis](docs/screenshot.png)
+
 ## Ce qui existe (v0.1 — la carte)
 
 - Carte SVG des 101 départements : métropole en Lambert-93, chaque DROM dans son encart et sa projection,
