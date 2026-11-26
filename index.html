@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>France 2027 — la carte du pays</title>
+  <meta name="description" content="La France, métropole et outre-mer, en données publiques : revenus, emploi, logement, population et résultats électoraux, département par département.">
+  <meta name="theme-color" content="#0f1a26">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230f1a26'/%3E%3Crect x='14' y='16' width='12' height='32' fill='%232f5fb3'/%3E%3Crect x='26' y='16' width='12' height='32' fill='%23f3eee2'/%3E%3Crect x='38' y='16' width='12' height='32' fill='%23d4453b'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header id="topbar">
+    <div class="brand"><span class="flag" aria-hidden="true"><i></i><i></i><i></i></span><span>France&nbsp;2027</span></div>
+    <div id="headline" class="headline" aria-label="Chiffres nationaux"></div>
+    <div class="spacer"></div>
+    <div class="search" role="search">
+      <input id="search" type="search" placeholder="Département, code…" autocomplete="off" spellcheck="false" aria-label="Rechercher un territoire (/)" aria-controls="search-results">
+      <div id="search-results" class="panel search-results" role="listbox" hidden></div>
+    </div>
+    <button id="btn-almanac" class="btn" title="Ce que signifie chaque chiffre et d'où il vient">Almanach</button>
+  </header>
+
+  <main id="stage">
+    <svg id="map" role="img" aria-label="Carte de la France et des outre-mer"></svg>
+    <div id="zoom" class="panel zoom">
+      <button data-zoom="in" aria-label="Zoomer">+</button>
+      <button data-zoom="out" aria-label="Dézoomer">−</button>
+      <button data-zoom="reset" aria-label="Vue d'ensemble" title="Vue d'ensemble">⌂</button>
+    </div>
+    <aside id="sidebar" class="panel sidebar">
+      <nav id="lens-dock" class="lens-dock" aria-label="Choix de l'indicateur"></nav>
+      <div id="legend" class="legend" aria-live="polite"></div>
+    </aside>
+    <aside id="panel" class="panel side" hidden aria-label="Fiche du territoire"></aside>
+    <div id="tooltip" class="tooltip" hidden></div>
+  </main>
+
+  <div id="almanac" class="modal" hidden>
+    <div class="modal-card panel" role="dialog" aria-modal="true" aria-label="Almanach">
+      <button class="close" data-close aria-label="Fermer">✕</button>
+      <div id="almanac-body"></div>
+    </div>
+  </div>
+
+  <div id="loading">Arpentage du territoire…</div>
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>

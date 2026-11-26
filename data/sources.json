@@ -1,0 +1,37 @@
+[
+ {
+  "id": "ign_admin_express",
+  "title": "ADMIN EXPRESS COG CARTO (départements, régions, chefs-lieux)",
+  "publisher": "IGN — Géoplateforme",
+  "page": "https://geoservices.ign.fr/adminexpress",
+  "licence": "Licence Ouverte Etalab 2.0"
+ },
+ {
+  "id": "insee_comparateur",
+  "title": "Base du comparateur de territoires (recensement 2023, Filosofi 2023, état civil, Flores)",
+  "publisher": "Insee",
+  "page": "https://www.insee.fr/fr/statistiques/2521169",
+  "licence": "Licence Ouverte Etalab 2.0"
+ },
+ {
+  "id": "insee_chomage",
+  "title": "Taux de chômage localisés par département (moyenne trimestrielle, CVS)",
+  "publisher": "Insee",
+  "page": "https://www.insee.fr/fr/statistiques/2012804",
+  "licence": "Licence Ouverte Etalab 2.0"
+ },
+ {
+  "id": "mi_pres2022_t1",
+  "title": "Élection présidentielle 2022 — résultats définitifs du 1er tour par département",
+  "publisher": "Ministère de l'Intérieur",
+  "page": "https://www.data.gouv.fr/fr/datasets/62581fdf02e05e365ea227a1/",
+  "licence": "Licence Ouverte Etalab 2.0"
+ },
+ {
+  "id": "mi_pres2022_t2",
+  "title": "Élection présidentielle 2022 — résultats définitifs du 2nd tour par département",
+  "publisher": "Ministère de l'Intérieur",
+  "page": "https://www.data.gouv.fr/fr/datasets/626a86215fb310e32b48b137/",
+  "licence": "Licence Ouverte Etalab 2.0"
+ }
+]
